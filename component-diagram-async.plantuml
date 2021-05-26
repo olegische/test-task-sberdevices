@@ -1,0 +1,76 @@
+@startuml
+
+skinparam monochrome true
+
+!$MB = "Kafka"
+!$obj = "api/movies"
+!$gtM = "GET"
+!$IFilterREST = $gtM+" "+$obj+"?filter[name]=<<query>>"
+!$IGetREST = $gtM+" "+$obj+"?id=<<id>>"
+
+!$name = "A"
+component "$name" {
+  !$Class = ":KafkaProducer"
+  !$Obj = "producer"+$name
+  !$Cmp = $Obj+$Class
+  component "$Cmp" as AProd
+  interface "$Obj.send('movies/filter/request', <CallID, Query>)" as ASnFl
+  interface "$Obj.send('movies/get/request', <CallID, ID>)" as ASnGt
+  AProd -down-> ASnFl
+  AProd -down-> ASnGt
+  !$Class = ":KafkaConsumer"
+  !$Obj = "consumer"+$name
+  !$Cmp = $Obj+$Class
+  component "$Cmp" as ACons
+  interface "$Obj.poll()" as APl
+  interface "$Obj.subscribe('movies/*/reply')" as ASub
+  ACons -down-> APl
+  ACons -down-> ASub
+}
+
+!$name = "B"
+component "$name" {
+  !$Class = ":KafkaProducer"
+  !$Obj = "producer"+$name
+  !$Cmp = $Obj+$Class
+  component "$Cmp" as BProd
+  interface "$Obj.send('movies/filter/reply', <CallID, [[id, name, description], ...]>)" as BSnFl
+  interface "$Obj.send('movies/get/reply', <CallID, Movie>)" as BSnGt
+  BProd -up-> BSnFl
+  BProd -up-> BSnGt
+  !$Class = ":KafkaConsumer"
+  !$Obj = "consumer"+$name
+  !$Cmp = $Obj+$Class
+  component "$Cmp" as BCons
+  interface "$Obj.poll()" as BPl
+  interface "$Obj.subscribe('movies/*/request')" as BSub
+  BCons -up-> BPl
+  BCons -up-> BSub
+}
+
+component "$MB" as MB
+interface "IProducer" as IProd
+interface "IConsumer" as ICons
+MB -left-> IProd
+MB -right-> ICons
+
+ASnFl .down.> IProd
+ASnGt .down.> IProd
+APl .down.> ICons
+ASub .down.> ICons
+
+BSnFl .up.> IProd
+BSnGt .up.> IProd
+BPl .up.> ICons
+BSub .up.> ICons
+
+component "ProviderAPIGateway" as Prov
+interface "$IFilterREST" as IFlR
+interface "$IGetREST" as IGtR
+Prov -up-> IFlR
+Prov -up-> IGtR
+
+B .down.> IFlR
+B .down.> IGtR
+
+@enduml
