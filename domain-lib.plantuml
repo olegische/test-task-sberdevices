@@ -1,0 +1,28 @@
+@startuml
+
+!$Prov = "ContentProvider"
+!$MB = "Kafka"
+!$obj = "api/movies"
+!$gtM = "GET"
+!$IFilterREST = $gtM+" "+$obj+"?filter[name]=<<query>>"
+!$IGetREST = $gtM+" "+$obj+"?id=<<id>>"
+!$FlRepREST = "<<JSON>> Matches"
+!$GetRepREST = "<<JSON>> Movie"
+
+!$TpFlReq = "'movies/filter/request'"
+!$FlReq = "Request{RequestID, Query}"
+!$TpGtReq = "'movies/get/request'"
+!$GtReq = "Request{RequestID, ID}"
+
+!$SnFlReqMsg = $TpFlReq+", "+$FlReq
+!$SnGtReqMsg = $TpGtReq+", "+$GtReq
+
+!$TpFlRep = "'movies/filter/reply'"
+!$FlRep = "Reply{RequestID, Matches{Match{ID, Name, Description}, ...}}"
+!$TpGtRep = "'movies/get/reply'"
+!$GtRep = "Reply{RequestID, Movie{ID, Name, Description, Link}}"
+
+!$SnFlRepMsg = $TpFlRep+", "+$FlRep
+!$SnGtRepMsg = $TpGtRep+", "+$GtRep
+
+@enduml

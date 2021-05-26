@@ -1,0 +1,41 @@
+@startuml
+
+skinparam monochrome true
+
+!include domain-lib.plantuml
+
+!procedure $syncMsg($mode, $mt, $Sbj, $Obj, $pdu, $res)
+  !$msg = $mt+"("+$pdu+")"
+  !if ($mode == "act")
+    $Sbj -> $Obj : $msg
+    activate $Obj
+  !elseif ($mode == "deact")
+    $Obj --> $Sbj : $msg : $res
+    deactivate $Obj
+  !elseif ($mode == "comp")
+    $Sbj -> $Obj : $msg
+    activate $Obj
+    $Obj --> $Sbj : $msg : $res
+    deactivate $Obj
+  !endif
+!endprocedure
+
+!procedure $send($msg, $Sbj, $Obj, $pdu)
+  $syncMsg("act", $msg, $Sbj, $Obj, $pdu, "")
+!endprocedure
+
+!procedure $poll($msg, $Sbj, $Obj, $pdu)
+  $syncMsg("act", $msg, $Sbj, $Obj, $pdu, "")
+!endprocedure
+
+!procedure $get($msg, $Sbj, $Obj, $pdu, $res)
+  $syncMsg("comp", $msg, $Sbj, $Obj, $pdu, $res)
+!endprocedure
+
+$send("send", "A", $MB, $SnFlReqMsg)
+$poll("poll", $MB, "B", $FlReq)
+$get("GET", "B", $Prov, $IFilterREST, $FlRepREST)
+$send("send", "B", $MB, $SnFlRepMsg)
+$poll("poll", $MB, "A", $FlRep)
+
+@enduml

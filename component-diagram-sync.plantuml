@@ -2,13 +2,10 @@
 
 skinparam monochrome true
 
-!$MB = "Kafka"
-!$obj = "api/movies"
-!$gtM = "GET"
-!$IFilterREST = $gtM+" "+$obj+"?filter[name]=<<query>>"
-!$IGetREST = $gtM+" "+$obj+"?id=<<id>>"
-!$IFilter = "sendAndReceive('moviesTopic', {method='filter', name=<<query>>})"
-!$IGet = "sendAndReceive('moviesTopic', {method='get', id=<<id>>})"
+!include domain-lib.plantuml
+
+!$IFilter = "sendAndReceive('movies/', Request{Method='filter', Query})"
+!$IGet = "sendAndReceive('movies/', Request{Method='get', ID})"
 !$IRPCMB = "IReplyingKafkaOperations.sendAndReceive()"
 !$IRPCSrv = "IKafkaListenerContainerFactory"
 

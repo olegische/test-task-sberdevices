@@ -2,11 +2,8 @@
 
 skinparam monochrome true
 
-!$MB = "Kafka"
-!$obj = "api/movies"
-!$gtM = "GET"
-!$IFilterREST = $gtM+" "+$obj+"?filter[name]=<<query>>"
-!$IGetREST = $gtM+" "+$obj+"?id=<<id>>"
+!include domain-lib.plantuml
+
 
 !$name = "A"
 component "$name" {
@@ -14,8 +11,8 @@ component "$name" {
   !$Obj = "producer"+$name
   !$Cmp = $Obj+$Class
   component "$Cmp" as AProd
-  interface "$Obj.send('movies/filter/request', <CallID, Query>)" as ASnFl
-  interface "$Obj.send('movies/get/request', <CallID, ID>)" as ASnGt
+  interface "$Obj.send($SnFlReqMsg)" as ASnFl
+  interface "$Obj.send($SnGtReqMsg)" as ASnGt
   AProd -down-> ASnFl
   AProd -down-> ASnGt
   !$Class = ":KafkaConsumer"
@@ -34,8 +31,8 @@ component "$name" {
   !$Obj = "producer"+$name
   !$Cmp = $Obj+$Class
   component "$Cmp" as BProd
-  interface "$Obj.send('movies/filter/reply', <CallID, [[id, name, description], ...]>)" as BSnFl
-  interface "$Obj.send('movies/get/reply', <CallID, Movie>)" as BSnGt
+  interface "$Obj.send($SnFlRepMsg)" as BSnFl
+  interface "$Obj.send($SnGtRepMsg)" as BSnGt
   BProd -up-> BSnFl
   BProd -up-> BSnGt
   !$Class = ":KafkaConsumer"
@@ -64,7 +61,7 @@ BSnGt .up.> IProd
 BPl .up.> ICons
 BSub .up.> ICons
 
-component "ProviderAPIGateway" as Prov
+component "$Prov" as Prov
 interface "$IFilterREST" as IFlR
 interface "$IGetREST" as IGtR
 Prov -up-> IFlR

@@ -32,11 +32,13 @@
   "data": [
     {
       "id": 1,
-      "name": "query1"
+      "name": "query1",
+      "description": "Best Movie"
     },
     {
       "id": 14,
-      "name": "query2"
+      "name": "query2",
+      "description": "Good Movie"
     }
   ]
 }
@@ -53,6 +55,7 @@
       "type": "movies",
       "id": "id",
       "name": "MovieName",
+      "description": "Best Movie",
       "link": "http://provider.com/store/movies/id"
     },
   ]
