@@ -4,10 +4,10 @@
 !$MB = "Kafka"
 !$obj = "api/movies"
 !$gtM = "GET"
-!$IFilterREST = $gtM+" "+$obj+"?filter[name]=<<query>>"
-!$IGetREST = $gtM+" "+$obj+"?id=<<id>>"
+!$IFilterREST = $gtM+" "+$obj+"?filter[name]=Query"
+!$IGetREST = $gtM+" "+$obj+"?id=ID"
 !$FlRepREST = "<<JSON>> Matches"
-!$GetRepREST = "<<JSON>> Movie"
+!$GtRepREST = "<<JSON>> Movie"
 
 !$TpFlReq = "'movies/filter/request'"
 !$FlReq = "Request{RequestID, Query}"
