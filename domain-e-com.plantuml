@@ -1,0 +1,28 @@
+@startuml
+
+skinparam monochrome true
+hide circles
+
+class "Product" as Prod {
+  id
+  type
+  name
+  price
+}
+class "Order" as Ord {
+  id
+  guid
+  productId
+  total
+}
+class "Customer" as Cust {
+  id
+  name
+  credentials
+}
+
+
+Ord "0..*" o-- "1..*" Prod : contain >
+Cust "1" -- "0..*" Ord : make >
+
+@enduml
